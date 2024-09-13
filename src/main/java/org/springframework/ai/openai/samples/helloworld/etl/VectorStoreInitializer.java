@@ -11,6 +11,7 @@ import org.springframework.ai.vectorstore.observation.AbstractObservationVectorS
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "intialize")
+@ConditionalOnProperty(value = "initialize")
 public class VectorStoreInitializer {
     private static final int MAX_TOP_K = 16384;
 
@@ -36,7 +37,7 @@ public class VectorStoreInitializer {
     private final AbstractObservationVectorStore abstractObservationVectorStore;
 
     @PostConstruct
-    public void init() {
+    public void ensureVectorStoreIsInitialized() {
         List<Document> docs = textDocumentReader.stream()
                 .map(DocumentReader::read)
                 .flatMap(List::stream)
@@ -48,17 +49,21 @@ public class VectorStoreInitializer {
         for (Map.Entry<String, List<Document>> entry : source.entrySet()) {
             String sourceName = entry.getKey();
             List<Document> documents = entry.getValue();
-
-            // Optionally we could check, if the id is already in the vector store
-            // The id is simply a hash of the document content
             List<Document> existing = existingDocumentsForSource(sourceName);
-            if (existing.size() != documents.size()) {
+
+            if (documentsDiffer(existing, documents)) {
                 abstractObservationVectorStore.delete(existing.stream().map(Document::getId).toList());
                 vectorStore.add(documents);
             } else {
                 vectorStore.add(documents);
             }
         }
+    }
+
+    private boolean documentsDiffer(Collection<Document> a, Collection<Document> b) {
+        var as = a.stream().map(Document::getId).collect(Collectors.toSet());
+        var bs = b.stream().map(Document::getId).collect(Collectors.toSet());
+        return !as.equals(bs);
     }
 
     /**

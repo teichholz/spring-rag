@@ -12,15 +12,16 @@ import java.util.List;
 @Component
 public class TextDocumentReader implements DocumentReader {
 
-    private final Resource resource;
-
-    TextDocumentReader(@Value("classpath:documents/paragraphen.txt") Resource resource) {
-        this.resource = resource;
-    }
+    @Value("classpath:documents/*.txt")
+    private List<Resource> resources;
 
     public List<Document> get() {
-        TextReader textReader = new TextReader(resource);
+        List<Document> docs = resources.stream()
+                .map(TextReader::new)
+                .map(DocumentReader::read)
+                .flatMap(List::stream)
+                .toList();
 
-        return new ParagraphSplitter().split(textReader.read());
+        return new ParagraphSplitter().split(docs);
     }
 }

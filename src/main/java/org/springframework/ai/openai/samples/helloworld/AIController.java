@@ -2,6 +2,7 @@ package org.springframework.ai.openai.samples.helloworld;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.embedding.EmbeddingResponse;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,12 +31,13 @@ class AIController {
 
     @GetMapping("/q")
     Map<String, String> question(@RequestParam(value = "message") String message, @RequestParam(value = "topk", defaultValue = "4") int topk) {
+        ChatResponse res = chatClient.prompt()
+                .user(message)
+                .call().chatResponse();
+
         return Map.of(
-                "completion",
-                chatClient.prompt()
-                        .user(message)
-                        .call()
-                        .content()
+                "completion", res.getResult().getOutput().getContent(),
+                "files used", res.getMetadata().get("files-used").toString()
         );
     }
 

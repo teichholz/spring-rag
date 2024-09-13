@@ -32,6 +32,9 @@ public class RAGAdvisor implements RequestAdvisor, ResponseAdvisor {
                 SearchRequest.defaults()
                         .withQuery(request.userText())
         );
+        List<String> files = documents.stream()
+                .map(doc -> doc.getMetadata().get("source").toString())
+                .collect(Collectors.toList());
         String context = documents.stream()
                 .map(Document::getContent)
                 .collect(Collectors.joining("\n"));
@@ -39,6 +42,7 @@ public class RAGAdvisor implements RequestAdvisor, ResponseAdvisor {
         // Extend Params
         Map<String, Object> advisedSystemParams = new HashMap<>(request.systemParams());
         adviseContext.put("context-used", context);
+        adviseContext.put("files-used", files);
         advisedSystemParams.put("context", context);
 
         return AdvisedRequest.from(request)
@@ -54,6 +58,7 @@ public class RAGAdvisor implements RequestAdvisor, ResponseAdvisor {
     public ChatResponse adviseResponse(ChatResponse response, Map<String, Object> adviseContext) {
         return ChatResponse.builder().from(response)
                 .withMetadata("context-used", adviseContext.get("context-used"))
+                .withMetadata("files-used", adviseContext.get("files-used"))
                 .build();
     }
 

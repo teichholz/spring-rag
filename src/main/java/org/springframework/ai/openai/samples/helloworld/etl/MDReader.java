@@ -13,11 +13,8 @@ import java.util.List;
 @Component
 public class MDReader implements DocumentReader {
 
-    private final Resource resource;
-
-    MDReader(@Value("classpath:documents/abwesenheit.md") Resource resource) {
-        this.resource = resource;
-    }
+    @Value("classpath:documents/*.md")
+    private List<Resource> resources;
 
     public List<Document> get() {
         MarkdownDocumentReaderConfig config = MarkdownDocumentReaderConfig.builder()
@@ -26,7 +23,10 @@ public class MDReader implements DocumentReader {
                 .withIncludeBlockquote(true)
                 .build();
 
-        MarkdownDocumentReader reader = new MarkdownDocumentReader(resource, config);
-        return reader.get();
+        return resources.stream()
+                .map(resource -> new MarkdownDocumentReader(resource, config))
+                .map(DocumentReader::read)
+                .flatMap(List::stream)
+                .toList();
     }
 }
