@@ -1,7 +1,10 @@
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.openai.samples.helloworld.Application;
+import org.springframework.ai.openai.samples.helloworld.etl.HTMLDocumentReader;
+import org.springframework.ai.openai.samples.helloworld.etl.MDReader;
 import org.springframework.ai.openai.samples.helloworld.etl.TextDocumentReader;
+import org.springframework.ai.reader.markdown.MarkdownDocumentReader;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,12 @@ public class VectorStoreTest {
     @Autowired
     private TextDocumentReader textDocumentReader;
 
+    @Autowired
+    private HTMLDocumentReader htmlDocumentReader;
+
+    @Autowired
+    private MDReader markdownDocumentReader;
+
     @Test
     public void insert() {
         List <Document> documents = List.of(
@@ -33,6 +42,14 @@ public class VectorStoreTest {
         List<Document> results = vectorStore.similaritySearch(SearchRequest
                 .query("Was ist Spring?"));
         System.out.println(results);
+    }
+
+    @Test
+    public void abwes() {
+        List<Document> readdocs = htmlDocumentReader.read();
+        for (Document document : readdocs) {
+            System.out.println(document);
+        }
     }
 
     @Test

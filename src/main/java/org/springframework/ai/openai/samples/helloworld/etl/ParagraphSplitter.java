@@ -5,10 +5,10 @@ import org.springframework.ai.transformer.splitter.TextSplitter;
 import java.util.Arrays;
 import java.util.List;
 
-public class NewlineSplitter extends TextSplitter {
+public class ParagraphSplitter extends TextSplitter {
 
     @Override
     protected List<String> splitText(String text) {
-        return Arrays.asList(text.split("\n\n"));
+        return Arrays.asList(text.split("\n\n+"));
     }
 }

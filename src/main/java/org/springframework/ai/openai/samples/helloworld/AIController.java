@@ -16,7 +16,6 @@ import java.util.Map;
 class AIController {
     private final ChatClient chatClient;
     private final EmbeddingModel embeddingModel;
-    private final RAGService RAGService;
 
 
     @GetMapping("/ai")
@@ -30,11 +29,11 @@ class AIController {
     }
 
     @GetMapping("/q")
-    Map<String, String> question(@RequestParam(value = "message") String message, @RequestParam(value = "topk", defaultValue = "1") int topk) {
+    Map<String, String> question(@RequestParam(value = "message") String message, @RequestParam(value = "topk", defaultValue = "4") int topk) {
         return Map.of(
                 "completion",
-                chatClient
-                        .prompt(RAGService.getPrompt(message, topk))
+                chatClient.prompt()
+                        .user(message)
                         .call()
                         .content()
         );

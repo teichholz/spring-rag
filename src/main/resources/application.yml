@@ -1,3 +1,5 @@
+initialize: false
+
 spring:
   ai:
     openai:

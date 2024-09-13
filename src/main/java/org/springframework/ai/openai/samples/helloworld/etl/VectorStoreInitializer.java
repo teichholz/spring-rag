@@ -8,18 +8,27 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.ai.vectorstore.observation.AbstractObservationVectorStore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Responsible for initializing the vector store with all the relevant documents.
+ * If the amount of found {@link Document} in a file differ from before, the old documents are deleted and the new ones are added.
+ */
 @Component
 @RequiredArgsConstructor
+@ConditionalOnProperty(value = "intialize")
 public class VectorStoreInitializer {
     private static final int MAX_TOP_K = 16384;
 
     private final VectorStore vectorStore;
+    /**
+     * Inject all the {@link DocumentReader} beans to read the documents.
+     */
     private final List<DocumentReader> textDocumentReader;
     /**
      * Capable of deleting vectors from the store. Still generic over the concrete vector store implementation.
