@@ -54,7 +54,7 @@ public class VectorStoreInitializer {
             List<Document> documents = entry.getValue();
             List<Document> existing = existingDocumentsForSource(sourceName);
 
-            if (documentsDiffer(existing, documents)) {
+            if (sameSourceDocumentsDiffer(existing, documents)) {
                 abstractObservationVectorStore.delete(existing.stream().map(Document::getId).toList());
                 vectorStore.add(documents);
 
@@ -66,10 +66,36 @@ public class VectorStoreInitializer {
         }
     }
 
-    private boolean documentsDiffer(Collection<Document> a, Collection<Document> b) {
-        var as = new HashSet<>(a);
-        var bs = new HashSet<>(b);
-        return true;
+    /**
+     * Compares the collections of documents by their content and metadata.
+     * @return true if the collections differ in size, metadata keys or content else false.
+     */
+    private boolean sameSourceDocumentsDiffer(Collection<Document> a, Collection<Document> b) {
+        var existing = new HashSet<>(a);
+        var newd = new HashSet<>(b);
+
+        if (existing.size() != newd.size()) {
+            return true;
+        }
+
+        var existingMetaKeys = existing.stream()
+                .map(Document::getMetadata)
+                .map(Map::keySet)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+        var newMetaKeys = newd.stream()
+                .map(Document::getMetadata)
+                .map(Map::keySet)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+        newMetaKeys.removeAll(existingMetaKeys);
+        if (!newMetaKeys.isEmpty()) {
+            return true;
+        }
+
+        var existingContent = existing.stream().map(Document::getContent).collect(Collectors.toSet());
+        var newContent = newd.stream().map(Document::getContent).collect(Collectors.toSet());
+        return !existingContent.equals(newContent);
     }
 
     /**

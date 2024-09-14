@@ -18,12 +18,20 @@ public class TextDocumentReader implements DocumentReader {
     public List<Document> get() {
         List<Document> docs = resources.stream()
                 .map(SimpleReader::new)
+                .map(this::addMetadata)
                 .map(DocumentReader::read)
                 .flatMap(List::stream)
                 .map(this::addMetadata)
                 .toList();
 
         return new ParagraphSplitter().split(docs);
+    }
+
+    /**
+     * Noop for now.
+     */
+    public SimpleReader addMetadata(SimpleReader reader) {
+        return reader;
     }
 
     /**
