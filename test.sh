@@ -20,8 +20,14 @@ if [ ! command -v jq &> /dev/null ]; then
     exit 1
 fi
 
-# Read the file line by line
-while IFS= read -r line; do
+if [ ! command -v parallel &> /dev/null ]; then
+    echo "parallel is not installed. Please install parallel."
+    exit 1
+fi
+
+process_line() {
+    local line="$1"
+
     # URL encode the question
     encoded_question=$(printf '%s' "$line" | jq -sRr @uri)
 
@@ -33,5 +39,8 @@ while IFS= read -r line; do
     echo "Response:" $(echo $response | jq -r '.completion')
     echo "Files used:" $(echo $response | jq -r '.files')
     echo "-------------------"
+}
 
-done < "$file"
+export -f process_line
+
+parallel process_line :::: "$file"
