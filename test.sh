@@ -15,12 +15,12 @@ if [ ! -f "$file" ]; then
     exit 1
 fi
 
-if [ ! command -v jq &> /dev/null ]; then
+if ! command -v jq &> /dev/null ; then
     echo "jq is not installed. Please install jq."
     exit 1
 fi
 
-if [ ! command -v parallel &> /dev/null ]; then
+if ! command -v parallel &> /dev/null ; then
     echo "parallel is not installed. Please install parallel."
     exit 1
 fi
@@ -36,9 +36,9 @@ process_line() {
 
     # Print the question and response
     echo "Question: $line"
-    echo "Response:" $(echo $response | jq -r '.completion')
-    echo "Files used:" $(echo $response | jq -r '.files')
-    echo "-------------------"
+    echo "Response: $(echo $response | jq -r '.completion')"
+    echo "Files used: $(echo $response | jq -r '.files')"
+    echo ""
 }
 
 export -f process_line

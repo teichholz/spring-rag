@@ -32,11 +32,13 @@ public class RAGAdvisor implements RequestAdvisor, ResponseAdvisor {
         List<Document> documents = vectorStore.similaritySearch(
                 SearchRequest.defaults()
                         .withQuery(request.userText())
+                        .withTopK(10)
         );
         List<String> files = documents.stream()
                 .map(doc -> doc.getMetadata().get("source"))
                 .filter(Objects::nonNull)
                 .map(Object::toString)
+                .distinct()
                 .collect(Collectors.toList());
         String context = documents.stream()
                 .map(Document::getContent)
