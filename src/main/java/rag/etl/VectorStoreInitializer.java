@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -66,8 +67,8 @@ public class VectorStoreInitializer {
     }
 
     private boolean documentsDiffer(Collection<Document> a, Collection<Document> b) {
-        var as = a.stream().map(Document::getId).collect(Collectors.toSet());
-        var bs = b.stream().map(Document::getId).collect(Collectors.toSet());
+        var as = new HashSet<>(a);
+        var bs = new HashSet<>(b);
         return !as.equals(bs);
     }
 

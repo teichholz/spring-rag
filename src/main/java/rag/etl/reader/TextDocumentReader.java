@@ -1,9 +1,7 @@
 package rag.etl.reader;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.document.DocumentReader;
-import org.springframework.ai.reader.TextReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,7 @@ public class TextDocumentReader implements DocumentReader {
 
     public List<Document> get() {
         List<Document> docs = resources.stream()
-                .map(TextReader::new)
+                .map(SimpleReader::new)
                 .map(DocumentReader::read)
                 .flatMap(List::stream)
                 .map(this::addMetadata)
@@ -29,7 +27,6 @@ public class TextDocumentReader implements DocumentReader {
     }
 
     /**
-     * Note that {@link Document#getMetadata()} is a shared object which is instantiated once in the {@link TextReader} and then shared.
      * Noop for now.
      */
     public Document addMetadata(Document document) {
