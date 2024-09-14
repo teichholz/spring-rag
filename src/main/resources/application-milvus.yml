@@ -1,0 +1,15 @@
+spring:
+  ai:
+    vectorstore:
+      milvus:
+        client:
+          host: "localhost"
+          port: 19530
+          username: "root"
+          password: "milvus"
+        initialize-schema: true # Die notwendige Collection mit der korrekten Dimension für die Emebddings wird automatisch erstellt
+        databaseName: "default"
+        collectionName: "default"
+        embeddingDimension: 1536
+        indexType: IVF_FLAT
+        metricType: COSINE

@@ -69,7 +69,7 @@ public class VectorStoreInitializer {
     private boolean documentsDiffer(Collection<Document> a, Collection<Document> b) {
         var as = new HashSet<>(a);
         var bs = new HashSet<>(b);
-        return !as.equals(bs);
+        return true;
     }
 
     /**
