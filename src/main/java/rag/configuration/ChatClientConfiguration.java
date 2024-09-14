@@ -1,4 +1,4 @@
-package org.springframework.ai.openai.samples.helloworld.configuration;
+package rag.configuration;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;

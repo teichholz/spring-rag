@@ -1,4 +1,4 @@
-package org.springframework.ai.openai.samples.helloworld.configuration;
+package rag.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.AdvisedRequest;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -33,7 +34,9 @@ public class RAGAdvisor implements RequestAdvisor, ResponseAdvisor {
                         .withQuery(request.userText())
         );
         List<String> files = documents.stream()
-                .map(doc -> doc.getMetadata().get("source").toString())
+                .map(doc -> doc.getMetadata().get("source"))
+                .filter(Objects::nonNull)
+                .map(Object::toString)
                 .collect(Collectors.toList());
         String context = documents.stream()
                 .map(Document::getContent)

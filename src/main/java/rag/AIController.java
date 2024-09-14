@@ -1,4 +1,4 @@
-package org.springframework.ai.openai.samples.helloworld;
+package rag;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
@@ -37,7 +37,7 @@ class AIController {
 
         return Map.of(
                 "completion", res.getResult().getOutput().getContent(),
-                "files used", res.getMetadata().get("files-used").toString()
+                "files", res.getMetadata().get("files-used").toString()
         );
     }
 

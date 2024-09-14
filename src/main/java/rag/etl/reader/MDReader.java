@@ -1,4 +1,4 @@
-package org.springframework.ai.openai.samples.helloworld.etl;
+package rag.etl.reader;
 
 import org.springframework.ai.document.Document;
 import org.springframework.ai.document.DocumentReader;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class MDReader implements DocumentReader {
+public class MDReader {
 
     @Value("classpath:documents/*.md")
     private List<Resource> resources;

@@ -1,12 +1,12 @@
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.openai.samples.helloworld.Application;
-import org.springframework.ai.openai.samples.helloworld.etl.MDReader;
-import org.springframework.ai.openai.samples.helloworld.etl.TextDocumentReader;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import rag.Application;
+import rag.etl.reader.MDReader;
+import rag.etl.reader.TextDocumentReader;
 
 import java.util.List;
 import java.util.Map;
@@ -37,14 +37,6 @@ public class VectorStoreTest {
         List<Document> results = vectorStore.similaritySearch(SearchRequest
                 .query("Was ist Spring?"));
         System.out.println(results);
-    }
-
-    @Test
-    public void abwes() {
-        List<Document> readdocs = markdownDocumentReader.read();
-        for (Document document : readdocs) {
-            System.out.println(document);
-        }
     }
 
     @Test

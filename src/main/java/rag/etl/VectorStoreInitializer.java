@@ -1,7 +1,8 @@
-package org.springframework.ai.openai.samples.helloworld.etl;
+package rag.etl;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.document.DocumentReader;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
  * Responsible for initializing the vector store with all the relevant documents.
  * If the amount of found {@link Document} in a file differ from before, the old documents are deleted and the new ones are added.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @ConditionalOnProperty(value = "initialize")
@@ -54,8 +56,11 @@ public class VectorStoreInitializer {
             if (documentsDiffer(existing, documents)) {
                 abstractObservationVectorStore.delete(existing.stream().map(Document::getId).toList());
                 vectorStore.add(documents);
-            } else {
-                vectorStore.add(documents);
+
+                log.info("Found new documents for source: {}", sourceName);
+                for (Document document : documents) {
+                    log.info("Adding document: {}", document.getMetadata());
+                }
             }
         }
     }
