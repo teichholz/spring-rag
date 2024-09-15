@@ -29,15 +29,15 @@ process_line() {
     local line="$1"
 
     # URL encode the question
-    encoded_question=$(printf '%s' "$line" | jq -sRr @uri)
+    encoded_question=$(echo "$line" | jq -sRr @uri)
 
     # Make the GET request
     response=$(curl -s "http://localhost:8080/q?message=$encoded_question")
 
     # Print the question and response
     echo "Question: $line"
-    echo "Response: $(echo $response | jq -r '.completion')"
-    echo "Files used: $(echo $response | jq -r '.files')"
+    echo "Response: $(echo "$response" | jq -r '.completion')"
+    echo "Files used: $(echo "$response" | jq -r '.files')"
     echo ""
 }
 
