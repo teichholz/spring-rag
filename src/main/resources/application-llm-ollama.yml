@@ -1,0 +1,7 @@
+spring:
+  ai:
+    ollama:
+      base-url: "http://4.223.97.189"
+      chat:
+        options:
+          model: "phi3:3.8b-mini-128k-instruct-q5_K_M"

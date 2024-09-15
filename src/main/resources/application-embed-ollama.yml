@@ -1,0 +1,7 @@
+spring:
+  ai:
+    ollama:
+      base-url: "http://4.223.97.189"
+      embedding:
+        options:
+          model: "paraphrase-multilingual-MiniLM-L12-v2.q8_0"

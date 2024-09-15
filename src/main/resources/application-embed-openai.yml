@@ -1,0 +1,7 @@
+spring:
+  ai:
+    openai:
+      embedding:
+        options:
+          # https://platform.openai.com/docs/guides/embeddings/what-are-embeddings
+          model: "text-embedding-3-small" # cheapest model for now
