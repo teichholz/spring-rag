@@ -70,10 +70,7 @@ public class VectorStoreInitializer {
      * Compares the collections of documents by their content and metadata.
      * @return true if the collections differ in size, metadata keys or content else false.
      */
-    private boolean sameSourceDocumentsDiffer(Collection<Document> a, Collection<Document> b) {
-        var existing = new HashSet<>(a);
-        var newd = new HashSet<>(b);
-
+    private boolean sameSourceDocumentsDiffer(Collection<Document> existing, Collection<Document> newd) {
         if (existing.size() != newd.size()) {
             return true;
         }
