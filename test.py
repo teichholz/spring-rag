@@ -1,6 +1,5 @@
 import sys
 import os
-import urllib.parse
 import requests
 from concurrent.futures import ThreadPoolExecutor
 
@@ -15,9 +14,8 @@ def usage():
 
 def process_line(question, solution=None):
     """ Process a single question with optional solution """
-    # URL encode the question
-    encoded_question = urllib.parse.quote(question)
-    response = requests.get(f"http://localhost:8080/q?message={encoded_question}")
+    params = { 'message': question }
+    response = requests.get("http://localhost:8080/q", params)
 
     # Extract response
     if response.status_code != 200:
@@ -35,10 +33,11 @@ def process_line(question, solution=None):
     }
 
     if solution:
-        # URL encode the solution and response
-        encoded_response = urllib.parse.quote(completion)
-        encoded_solution = urllib.parse.quote(solution)
-        test_response = requests.get(f"http://localhost:8080/test?answer={encoded_response}&solution={encoded_solution}")
+        params = {
+            'answer': completion,
+            'solution': solution
+        }
+        test_response = requests.get(f"http://localhost:8080/test", params)
 
         if test_response.status_code != 200:
             print(f"Error comparing the response for question: {question}", file=sys.stderr)
